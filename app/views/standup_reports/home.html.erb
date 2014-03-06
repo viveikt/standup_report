@@ -1,0 +1,120 @@
+<% content_for :header_tags do %>
+<%= stylesheet_link_tag 'standup.css', 'jquery.qtip.css', :plugin => 'standup_report' %>
+<%= javascript_include_tag 'jquery.qtip.pack.js', 'standup_report_js', :plugin => 'standup_report' %>
+<% end %>
+<% html_title "Prevas StandUp Reports" %>
+
+<h2><%= @selected_date %>: StandUp Reports</h2>
+
+<%= render :partial => "report" %>
+
+<% if !@standup_data.empty? %>
+ <div class="standup_show">
+  <% @standup_data.each do |standup| %>
+
+   <div class="standup_show_header">
+    <b><i><%= standup.user %></i> Reported at:<%= standup.updated_at %></b>
+   </div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_last_day_work'] : l(:last_day_work)%>
+	</b></p>
+
+	<div class="wiki">
+	 <%= textilizable standup.prev_day %>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_today_work'] : l(:today_work)%>
+	</b></p>
+
+	<div class="wiki">
+	 <%= textilizable standup.current_day %>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_roadblock'] : l(:roadblock)%></b></p>
+
+	<div class="wiki">
+	 <%= textilizable standup.roadblocks %>
+	</div>
+
+  <% end %>
+ </div>
+<% else %>
+ <p><b>You have not reported any time for today, to add new please use the button on the right</b></p>
+<% end %>
+
+<div class="standup_home_left">
+ <div class="standup_home_rep_users">
+  <p><b>Reported Users:</b></p>
+   <% if @standup_reported_users.count >= 1 %>
+	<% @standup_reported_users.each do |users| %>
+	 <% if @rest_logins.include? (users.user)%>
+	  <div style="border: 1px solid; width: 200px; float: left; padding: 5px;background:#F2F2F2;">
+	   <div class="id standup_tooltip_ajax story_field" aria-describedby="ui-tooltip-7-content">
+
+		<div class="tooltip_text"><%= render :partial => "tooltip", :object => users if defined?(render_tooltip) %>
+		</div>
+
+		<div class="standup_id"><%= standup_id_for_user(users) %></div>
+		 <b><%= link_to("#{User.find_by_login("#{users.user}").name}", User.find_by_login(users.user).present? ? project_standup_report_path(:project_id => @project.identifier, :id => users.id) : "")%>
+		   <%= hidden_field_tag("standup_report_project_id","#{@project.identifier}")%>
+		 </b>
+		</div>
+	   </div>
+	  <% end %>
+     <% end %>
+   <% else %>
+    <p>None of the users have reported for <%= @selected_date %></p>
+   <% end %>
+  </div>
+
+ <div class="standup_home_rep_norep_users">
+  <p><b>No report from:</b></p>
+   <% login_reported = @standup_reported_users.collect{|a| a.user} %>
+   <% differences = @rest_logins - login_reported %>
+   <% if !differences.empty? %>
+    <% different_users = User.find_all_by_login(differences)%>
+    <% different_users.sort{|a,b| a.name <=> b.name}.each do |user| %>
+
+	 <div style="border: 1px solid; width: 200px; float: left; padding: 5px;background:#F2F2F2;"><b><%= user.name %></b>
+	 </div>
+
+	<% end %>
+	<% else %>
+	 <p>All users have reported for Today</p>
+	<% end %>
+   </div>
+
+ </div>
+
+<% content_for :sidebar do %>
+ <% if @rest_logins.include?(User.current.login)%>
+	<div class="standup_home_right">
+		<a class="icon icon-add" href="/projects/<%= @project.identifier%>/standup_reports/verify?selected_date=<%= @selected_date %>">Add/Edit your report</a>
+	</div>
+ <% end %>
+	 <div id="datepicker"></div>
+	<script>
+		$(function() {
+		var todaysdate = new Date();
+		var qs = getQueryStrings();
+		    if(qs["days_ago"] != undefined)
+		      var days_ago = qs["days_ago"];
+		    else
+		      var days_ago = 0;
+
+		var SelectedDates = {};
+		var newselecteddate = getNewCalandarDate(todaysdate,days_ago);
+		    $( "#datepicker" ).datepicker({ maxDate: "0" , onSelect: function(dateText, inst) {
+		          var dateAsString = dateText; //the first parameter of this function
+		          var selecteddate = $(this).datepicker( 'getDate' ); //the getDate method
+		          location.href = "/projects/<%= @project.identifier%>/standup_reports/home?selected_date="+selecteddate+"&days_ago="+dateDiff(selecteddate , todaysdate);
+		       }
+		     });
+		  
+		  $('#datepicker').datepicker('setDate', newselecteddate);
+		  setTimeout(function(){ add_Class_To_Selected_Date(); },1000);
+		  $('#daily_status_content').height('400px');
+		  initToolTip();
+		});
+	</script>
+<% end %>

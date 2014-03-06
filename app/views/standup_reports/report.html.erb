@@ -1,0 +1,80 @@
+<% content_for :header_tags do %>
+<%= stylesheet_link_tag 'standup.css', :plugin => 'standup_report' %>
+<% end %>
+
+<% unless @standup_reports.is_a? Hash %>
+ <h2>Standup Report of <%= @user.name %> From <%= @from %> To <%= @to %></h2>
+ <div class="standup_show">
+  <% if @standup_reports.empty? %>
+   <div class="standup_show_header">
+    <b> <%= @user.name %> has not submitted Standup report.</b>
+   </div>
+   <br />
+  <% else %>
+   <% @standup_reports.each do |standup_report|%>
+    <div class="standup_show_header">
+	 <h3>Date : <%= standup_report.title %> (<%= standup_report.title.to_date.strftime("%A")%>)</h3>
+    </div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_last_day_work'] : l(:last_day_work)%>
+	</b></p>
+
+	<div class="wiki"><%= textilizable standup_report.prev_day %></div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_today_work'] : l(:today_work)%>
+	</b></p>
+
+    <div class="wiki"><%= textilizable standup_report.current_day %></div>
+
+    <p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_roadblock'] : l(:roadblock)%>
+	</b></p>
+    
+    <div class="wiki"><%= textilizable standup_report.roadblocks %></div>
+   <% end %>
+  <% end %>
+ </div>
+ <br />
+
+<% else %>
+
+<% @standup_reports.each do |k,v|%>
+ <% user = User.find_by_login(k)%>
+ <h2>Standup Report of <%= user.name %> From <%= @from %> To <%= @to %></h2>
+ <div class="standup_show">
+  <% if v.empty? %>
+   <div class="standup_show_header">
+    <b><%= user.name %> has not submitted Standup report.</b>
+   </div>
+   <br />
+  <% else %>
+   <% v.each do |standup_report|%>
+	<div class="standup_show_header">
+	 <h3>Date : <%= standup_report.title %> (<%= standup_report.title.to_date.strftime("%A")%>)</h3>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_last_day_work'] : l(:last_day_work)%>
+	</b></p>
+
+	<div class="wiki">
+		<%= textilizable standup_report.prev_day %>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_today_work'] : l(:today_work)%>
+	</b></p>
+
+	<div class="wiki">
+		<%= textilizable standup_report.current_day %>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_roadblock'] : l(:roadblock)%>
+	</b></p>
+
+	<div class="wiki">
+		<%= textilizable standup_report.roadblocks %>
+	</div>
+   <% end %>
+  <% end %>
+  </div>
+  <br />
+ <% end %>
+<% end %>

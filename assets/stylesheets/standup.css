@@ -1,0 +1,13 @@
+.standup_home_right {padding-bottom: 10px;}
+.standup_show {background: none repeat scroll 0 0 #F2F2F2;border: 1px solid;padding: 10px;}
+.standup_show_header {border-bottom: 1px dashed;padding-bottom: 5px;}
+.ui-widget-header {background: #333333 !important;}
+.ui-widget-content {width: 300px !important;}
+.standup_show .wiki {border:1px dotted; padding:5px;}
+.standup_show p b {font-size:1.2em;}
+.standup_show_header b {font-size:1.2em;}
+.standup_home_rep_users {padding-top: 20px;}
+.standup_home_rep_norep_users {padding-top: 50px;}
+.tooltip_text { display: none; }
+.standup_id { display: none; }
+ *= require bootstrap-datepicker

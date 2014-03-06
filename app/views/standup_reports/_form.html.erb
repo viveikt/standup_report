@@ -1,0 +1,21 @@
+<%= form_for @standup_report, :url => (@standup_report.new_record? ? project_standup_reports_path : project_standup_report_path) do |f| %>
+
+<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_last_day_work'] : l(:last_day_work)%>
+</b></p>
+<p><%= f.text_area :prev_day, :rows => 8, :class => 'wiki-edit' %></p>
+
+<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_today_work'] : l(:today_work)%>
+</b></p> 
+<p><%= f.text_area :current_day, :rows => 8, :class => 'wiki-edit' %></p>
+
+<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_roadblock'] : l(:roadblock)%>
+</b></p>    
+<p><%= f.text_area :roadblocks, :rows => 8, :class => 'wiki-edit' %></p>
+<% @current_user = User.current.login %>
+<%= hidden_field_tag("standup_report[user]","#{@current_user}")%>
+<%= hidden_field_tag("standup_report[title]",params[:selected_date])%>
+<p><%= f.submit "Save" %></p>
+<% end %>
+<%= wikitoolbar_for 'standup_report_prev_day' %>
+<%= wikitoolbar_for 'standup_report_current_day' %>
+<%= wikitoolbar_for 'standup_report_roadblocks' %>

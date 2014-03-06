@@ -1,0 +1,72 @@
+<% login_all = User.active.collect{|a| a.login}.delete_if{|rej| rej.empty?} %>
+<% readers = [] %>
+<% role = Role.find_by_name("Readers") %>
+<% role.members.where("project_id = ?", @project.id).uniq.each do |member| %>
+	<% user_role_readers_another = MemberRole.find_all_by_member_id(member.id) %>
+	<% count = 0 %>
+	<% user_role_readers_another.each do |member_by_role|%>
+		<% if member_by_role.role_id == role.id %>
+			<% count += 1%>
+		<% end %>
+	<% end %>
+	<% if count == user_role_readers_another.size %>
+		<% readers << User.find_by_id(member.user_id).login rescue nil %>
+	<% else %>
+		<% next %>
+	<% end %>
+<% end %>
+<% non_submission_info = NonSubmissionTime.where("project_id = ?", @project.id).first %>
+	
+<% rest_logins =  login_all - readers.collect!{|a| a}.delete_if{|rej| rej.empty?}  %>
+<% rest_logins = rest_logins.delete_if{|rej| User.find_by_login(rej).members.where("project_id = ?", @project.id).first.nil? }%>
+	
+<%= form_tag( {:controller => :standup_project_settings, :action => :standup_setting, :project_id => @project}, :id => "standup-form", :class => "standup_settings" ) do  %>
+				
+<p><b><%= l(:add_edit_standup_report)%></b></p>
+
+<div class="box tabular">
+<div class="standup_home_rep_norep_users" style="min-height:60px;">
+	<% unless rest_logins.empty? %>
+	   <% rest_users = User.find_all_by_login(rest_logins)%>
+		<% rest_users.sort{|a,b| a.name <=> b.name}.each do |user| %>
+		<div style="border: 1px solid; width: 200px; float: left; padding: 5px;background:#F2F2F2;">
+		<b>
+			<%= check_box_tag 'user[user_id][]', user.id, Member.where("user_id = ? AND project_id = ?", user.id, @project.id ).first.standup_report_permission, :style => "float:right;"  %>
+
+			<%= user.name %>
+		</b>
+		</div>
+		<% end %>
+		<%= hidden_field_tag 'user[user_id][]', '' %>	
+	<% end %>
+</div>
+<br />
+<br />
+
+<p><%= l(:label_standup_warning_nonsub_notification) %></p>
+	<p>	
+	<label><%= l(:label_standup_submission_deadline) %></label>&nbsp&nbsp
+	<b>Daily</b>&nbsp&nbsp
+	<%
+		hr = []
+		for i in 0..23
+			hr << [i,i]
+		end
+	%>
+	<%= l(:field_hours) %>&nbsp;<%= select_tag('settings[standup_nonsub_hr]', options_for_select(hr, 
+		:selected => non_submission_info.present? ? (non_submission_info.hour.blank? ? 12 : non_submission_info.hour) : 12)) %>
+		
+	<%= l(:label_standup_minutes) %>&nbsp;<%= select_tag('settings[standup_nonsub_min]', options_for_select([
+ 	[0,0],[5,5],[10,10],[15,15],[20,20],[25,25],[30,30],[35,35],[40,40],[45,45],[50,50],[55,55]], :selected => non_submission_info.present? ? (non_submission_info.min.blank? ? 0 : non_submission_info.min) : 0))%>								   
+	</p>
+	
+	<p>
+  	<label style="padding-left:20px;"><%= l(:label_standup_nonsub_mail_message) %></label><%= text_area_tag('settings[standup_nonsub_mail_message]', non_submission_info.present? ? non_submission_info.message : l(:non_submissiom_message), :style => "width:300px;height:40px;")%>
+	</p>
+
+</div>
+	<p>
+		<%= submit_tag "Save"%>
+	</p>
+<% end %>
+

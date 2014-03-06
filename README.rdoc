@@ -1,0 +1,22 @@
+= standup_report
+
+This Plugin provides the capability to submit daily Sandup report based on each Project.
+The user must be a member and have permission's other than readers for the project. Readers are able to see standup-report but are not able to write it.
+
+The following configurations can be made on the plugin
+	- Set up title's for yesterday, today and roadblocks.
+
+Here is the workflow of Standup Report tool.
+i) Administrator will allow the users to write on standup-report.
+ii) Administrator is also able to set email notification time and message as per project.
+ii) That user than able to add/edit standup-report on daily basis.
+iii) User can see other user's report also.
+iv) If the standup-report is not submitted before time, then a reminder email notification will be sent to that user.
+
+So run the following command for db migration
+
+  rake redmine:plugins:migrate NAME=standup_report RAILS_ENV=production
+
+When uninstalling the plugin, be sure to remove the db changes by running
+
+  rake redmine:plugins:migrate NAME=standup_report VERSION=0 RAILS_ENV=production

@@ -1,0 +1,8 @@
+<% content_for :header_tags do %>
+<%= stylesheet_link_tag 'standup.css', :plugin => 'standup_report' %>
+<%= javascript_include_tag 'standup_report_js', :plugin => 'standup_report' %>
+<% end %>
+<% html_title "Create your StandUp Report" %>
+<h2>Create your standup report for <%= params[:selected_date] %></h2>
+
+<%= render 'form' %>

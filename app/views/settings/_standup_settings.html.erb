@@ -1,0 +1,16 @@
+<fieldset class="box tabular">
+<legend><%= l(:label_standup_display) %></legend>
+
+<p>
+  <label><%= l(:label_standup_yesterday) %></label><%= text_field_tag 'settings[standup_last_day_work]', @settings['standup_last_day_work'], :size => 40 %>
+</p>
+
+<p>
+  <label><%= l(:label_standup_today) %></label><%= text_field_tag 'settings[standup_today_work]', @settings['standup_today_work'], :size => 40 %>
+</p>
+
+<p>
+  <label><%= l(:label_standup_roadblock) %></label><%= text_field_tag 'settings[standup_roadblock]', @settings['standup_roadblock'], :size => 40 %>
+</p>
+
+</fieldset>

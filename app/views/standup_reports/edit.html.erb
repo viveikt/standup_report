@@ -1,0 +1,18 @@
+<% content_for :header_tags do %>
+<%= stylesheet_link_tag 'standup.css', :plugin => 'standup_report' %>
+<%= javascript_include_tag 'standup_report_js', :plugin => 'standup_report' %>
+<% end %>
+<% html_title "Edit your StandUp Report" %>
+<h2><img src="/images/edit.png" alt="Edit">Edit your report for <%= @standup_report.title %>:</h2>
+<p class="created_edited_at">
+	<i>
+		<% if !@standup_report.created_at.nil? %>
+		<%= @standup_report.created_at.strftime("Reported At: %m/%d/%Y at %I:%M%p ") %>
+		<% end %>
+		<% if !@standup_report.updated_at.nil? && !@standup_report.updated_at == @standup_report.created_at %>
+		<%= @standup_report.updated_at.strftime("and last edited At:  %m/%d/%Y at %I:%M%p ") %>
+		<% end %>
+	</i>
+</p>
+
+<%= render 'form' %>

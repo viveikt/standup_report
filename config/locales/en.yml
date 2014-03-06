@@ -1,0 +1,26 @@
+# English strings go here for Rails i18n
+en:
+  label_standup: Standup
+  general_first_day_of_week: '7'
+  label_standup_nonsub_mail_subject: Non submission Standup notification
+  field_name: Name
+  label_week: Week
+  non_submissiom_message: "Your are receiving this messsage as you didn't filled your standup report."
+  label_standup_display: "Stand-up Work Title"
+  label_standup_yesterday: "Yesterday's Work"
+  label_standup_today: "Today's Work"
+  label_standup_roadblock: "Roadblock"
+  last_day_work: "What I did in the last day / week"
+  today_work: "What I will do today / this week"
+  label_standup_minutes: Minutes
+  label_standup_nonsub_mail_message: Non submission email message
+  label_standup_submission_deadline: Submission Deadline
+  add_edit_standup_report: Only Checked members are able to ADD/EDIT Stand-up report.
+  label_standup_warning_nonsub_notification: "Note: Any change to the below settings require redmine restart"
+  roadblock: "Do you have roadblocks? If you have questions or you need help. Please write your questions or needs here"
+  field_yesterday : "Yesterday"
+  field_current: "Today"
+  field_roadblocks: "Roadblocks"
+  notice_successful_save: "Successful save."
+  notice_successful_added: "Standup report added successfully."
+  notice_successful_updated: "Standup report updated successfully."

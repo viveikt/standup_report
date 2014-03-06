@@ -1,0 +1,58 @@
+<% content_for :header_tags do %>
+<%= stylesheet_link_tag 'standup.css', :plugin => 'standup_report' %>
+<%= javascript_include_tag 'standup_report_js', :plugin => 'standup_report' %>
+<% end %>
+<% html_title "Standup Report: #{@standup_report.user}'s Report dated #{@standup_report.title}" %>
+<h3>You are viewing <%= @user.firstname %> <%= @user.lastname %> (<%= @standup_report.user%>)'s Report dated <%= @standup_report.title %></h3>
+<div class="standup_show">
+	<div class="standup_show_header">
+		<b><i><%= @standup_report.user %></i> Reported at:<%= @standup_report.updated_at %></b>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_last_day_work'] : l(:last_day_work)%>
+	</b></p>
+
+	<div class="wiki">
+		<%= textilizable @standup_report.prev_day %>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_today_work'] : l(:today_work)%>
+	</b></p>
+
+	<div class="wiki">
+		<%= textilizable @standup_report.current_day %>
+	</div>
+
+	<p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_roadblock'] : l(:roadblock)%>
+	</b></p>
+
+	<div class="wiki">
+		<%= textilizable @standup_report.roadblocks %>
+	</div>
+</div>
+<% content_for :sidebar do %>
+	<div id="datepicker"></div>
+	<script>
+		$(function() {
+		var todaysdate = new Date();
+		var qs = getQueryStrings();
+		    if(qs["days_ago"] != undefined)
+		      var days_ago = qs["days_ago"];
+		    else
+		      var days_ago = 0;
+
+		var SelectedDates = {};
+		var newselecteddate = getNewCalandarDate(todaysdate,days_ago);
+		    $( "#datepicker" ).datepicker({ maxDate: "0" , onSelect: function(dateText, inst) {
+		          var dateAsString = dateText; //the first parameter of this function
+		          var selecteddate = $(this).datepicker( 'getDate' ); //the getDate method
+		          location.href = "/projects/<%= @project.identifier%>/standup_reports/home?selected_date="+selecteddate+"&days_ago="+dateDiff(selecteddate , todaysdate);
+		       }
+		     });
+		  
+		  $('#datepicker').datepicker('setDate', newselecteddate);
+		  setTimeout(function(){ add_Class_To_Selected_Date(); },1000);
+		  $('#daily_status_content').height('400px');
+		});
+	</script>
+<% end %>

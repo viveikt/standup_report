@@ -1,0 +1,27 @@
+<% user = User.find_by_login(tooltip.user)%>
+<div class="standup_show">
+ <div class="standup_show_header">
+  <h3><%= user.firstname %> <%= user.lastname %> (<%= tooltip.user%>)'s Report, dated <%= tooltip.title %></h3>
+ </div>
+
+ <p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_last_day_work'] : l(:last_day_work)%>
+ </b></p>
+
+ <div class="wiki">
+  <%= textilizable tooltip.prev_day %>
+ </div>
+
+ <p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_today_work'] : l(:today_work)%>
+ </b></p>
+
+ <div class="wiki">
+  <%= textilizable tooltip.current_day %>
+ </div>
+
+ <p><b><%= Setting.find_by_name("plugin_standup_report").present? ? Setting.plugin_standup_report['standup_roadblock'] : l(:roadblock)%>
+ </b></p>
+
+ <div class="wiki">
+  <%= textilizable tooltip.roadblocks %>
+ </div>
+</div>
