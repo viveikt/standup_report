@@ -1,9 +1,10 @@
 Standup Report 
 ==============
 
-Standup Report Plugin Redmine
+Standup Report Plugin For Redmine : Plugin uses the idea of Daily standup meetings which is usually held between the team to update the current status. This plugin can be used to add the daily status report of what work was done the previous day, what will you be doing today and if there are any roadblocks. Configurable mailers which send non submission reports to users who have not filled in their standup report. 
 
-Installation Procedure: 
+Installation Procedure:
+_______________________ 
 
 1. git clone https://github.com/viveikt/standup_report.git standup_report 
 
@@ -21,8 +22,10 @@ rake redmine:plugins:migrate RAILS_ENV=production
 
 You should now be able to see the plugin list in Administration -> Plugins and configure the newly installed plugin (if the plugin requires to be configured).
 
+==> The plugin can be enabled in the projects modules. Once enabled it will be pop up as a link in the menu. 
 
-Uninstalling the plugin
+Uninstalling the plugin :
+_________________________
 
 1. Downgrade your database (make a db backup before):
 
